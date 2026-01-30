@@ -109,16 +109,16 @@ const Resume = () => {
 
   const resumeRef = useRef();
 
-  const handleDownload = () => {
+  const handleDownloadPDF = () => {
     const element = resumeRef.current;
     const opt = {
-      margin: 0,
-      filename: "Mark-Jeffrey-Morales-Resume.pdf",
+      margin: 0.5,
+      filename: "Mark_Jeffrey_Morales_Resume.pdf",
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
-    html2pdf().from(element).set(opt).save();
+    html2pdf().set(opt).from(element).save();
   };
 
   const handlePrint = () => {
@@ -137,7 +137,16 @@ const Resume = () => {
         console.error("Error sharing:", error);
       }
     } else {
-      alert("Web Share API is not supported in your browser.");
+      // Fallback: copy link to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch (error) {
+        alert(
+          "Unable to share. Please copy the link manually: " +
+            window.location.href,
+        );
+      }
     }
   };
 
@@ -181,6 +190,16 @@ const Resume = () => {
                 alt="Mark Jeffrey Morales"
                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
               />
+            </div>
+
+            {/* Name and Title - Mobile Only */}
+            <div className="lg:hidden text-center mb-6">
+              <h1 className="text-2xl font-bold mb-1 bg-gradient-to-r from-blue-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">
+                Mark Jeffrey Morales
+              </h1>
+              <div className="text-base text-teal-400 font-semibold">
+                Business Development Manager
+              </div>
             </div>
 
             {/* Contact Section */}
@@ -347,11 +366,11 @@ const Resume = () => {
 
           {/* Right Content - Header & Experience */}
           <div className="lg:col-span-2 p-6 lg:p-10">
-            {/* Header */}
+            {/* Header - Desktop Only */}
             <div
               ref={(el) => (sectionRefs.current.header = el)}
               id="header"
-              className={`mb-8 transition-all duration-700 delay-300 ${
+              className={`hidden lg:block mb-8 transition-all duration-700 delay-300 ${
                 visibleSections.has("header") || isLoaded
                   ? "opacity-100 translate-y-0 animate-fade-in-down"
                   : "opacity-0 -translate-y-4"
@@ -459,7 +478,7 @@ const Resume = () => {
               }`}
             >
               <button
-                onClick={handleDownload}
+                onClick={handleDownloadPDF}
                 className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg font-semibold text-sm md:text-base hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:from-blue-500 hover:to-teal-500 animate-pulse-slow"
               >
                 Download PDF
