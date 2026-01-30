@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import profileImage from "./assets/sirm.jpg";
+import profileImage from "./assets/mark-morales.jpg";
 import html2pdf from "html2pdf.js";
 
 const Resume = () => {
