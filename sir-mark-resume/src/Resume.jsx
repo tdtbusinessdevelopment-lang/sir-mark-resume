@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import profileImage from "./assets/sirm.jpg";
+import html2pdf from "html2pdf.js";
 
 const Resume = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -8,7 +9,7 @@ const Resume = () => {
 
   useEffect(() => {
     setIsLoaded(true);
-    
+
     // Intersection Observer for scroll animations
     const observerOptions = {
       threshold: 0.1,
@@ -106,8 +107,45 @@ const Resume = () => {
     },
   ];
 
+  const resumeRef = useRef();
+
+  const handleDownload = () => {
+    const element = resumeRef.current;
+    const opt = {
+      margin: 0,
+      filename: "Mark-Jeffrey-Morales-Resume.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+    html2pdf().from(element).set(opt).save();
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Mark Jeffrey Morales' Resume",
+          text: "Check out Mark Jeffrey Morales' resume.",
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      alert("Web Share API is not supported in your browser.");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8 overflow-x-hidden">
+    <div
+      ref={resumeRef}
+      className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8 overflow-x-hidden"
+    >
       {/* Animated Background with floating particles */}
       <div className="fixed inset-0 opacity-5 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-teal-500 animate-pulse"></div>
@@ -121,7 +159,9 @@ const Resume = () => {
       {/* Resume Container - Single Page Layout */}
       <div
         className={`relative max-w-7xl mx-auto bg-slate-800/40 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden transition-all duration-1000 ${
-          isLoaded ? "opacity-100 scale-100 animate-slide-up" : "opacity-0 scale-95"
+          isLoaded
+            ? "opacity-100 scale-100 animate-slide-up"
+            : "opacity-0 scale-95"
         }`}
       >
         {/* Two Column Layout */}
@@ -217,8 +257,8 @@ const Resume = () => {
               </h2>
               <div className="space-y-4">
                 {skills.map((skill, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className="group animate-slide-in-left"
                     style={{ animationDelay: `${800 + index * 150}ms` }}
                   >
@@ -418,13 +458,22 @@ const Resume = () => {
                   : "opacity-0 translate-y-4"
               }`}
             >
-              <button className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg font-semibold text-sm md:text-base hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:from-blue-500 hover:to-teal-500 animate-pulse-slow">
+              <button
+                onClick={handleDownload}
+                className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg font-semibold text-sm md:text-base hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:from-blue-500 hover:to-teal-500 animate-pulse-slow"
+              >
                 Download PDF
               </button>
-              <button className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-slate-700/50 rounded-lg font-semibold text-sm md:text-base hover:bg-slate-600/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:border hover:border-teal-500/50">
+              <button
+                onClick={handlePrint}
+                className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-slate-700/50 rounded-lg font-semibold text-sm md:text-base hover:bg-slate-600/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:border hover:border-teal-500/50"
+              >
                 Print Resume
               </button>
-              <button className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-slate-700/50 rounded-lg font-semibold text-sm md:text-base hover:bg-slate-600/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:border hover:border-teal-500/50">
+              <button
+                onClick={handleShare}
+                className="flex-1 sm:flex-none px-6 py-3 md:py-2.5 bg-slate-700/50 rounded-lg font-semibold text-sm md:text-base hover:bg-slate-600/50 transition-all duration-300 hover:scale-105 active:scale-95 hover:border hover:border-teal-500/50"
+              >
                 Share
               </button>
             </div>
@@ -433,7 +482,10 @@ const Resume = () => {
       </div>
 
       {/* Copyright */}
-      <div className="text-center mt-6 text-slate-500 text-xs animate-fade-in opacity-0" style={{ animationDelay: "1500ms", animationFillMode: "forwards" }}>
+      <div
+        className="text-center mt-6 text-slate-500 text-xs animate-fade-in opacity-0"
+        style={{ animationDelay: "1500ms", animationFillMode: "forwards" }}
+      >
         © 2025 Mark Jeffrey Morales. All rights reserved.
       </div>
     </div>
