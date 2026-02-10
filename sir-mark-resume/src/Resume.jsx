@@ -281,12 +281,9 @@ const Resume = () => {
                     className="group animate-slide-in-left"
                     style={{ animationDelay: `${800 + index * 150}ms` }}
                   >
-                    <div className="flex justify-between mb-2">
+                    <div className="mb-2">
                       <span className="text-sm md:text-base text-slate-200 group-hover:text-teal-400 transition-colors duration-300">
                         {skill.name}
-                      </span>
-                      <span className="text-xs md:text-sm text-teal-400 font-semibold animate-count-up">
-                        {skill.level}%
                       </span>
                     </div>
                     <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden group-hover:bg-slate-700/70 transition-colors duration-300">
